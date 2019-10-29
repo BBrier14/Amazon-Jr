@@ -27,6 +27,28 @@ function showProducts(){
     connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
         console.log(res);
-        connection.end();
+        start();
     })
+}
+
+function start(){
+    inquirer
+        .prompt([
+            {
+                name: "item",
+                type: "input",
+                message: "Enter the ID Number of the product you would like to purchase"
+            },
+            {
+                name: "units",
+                type: "input",
+                message: "How many would you like to buy?",
+                validate: function(value){
+                    if (isNaN(value) === false){
+                        return true;
+                    }
+                        return false;
+                }
+            }
+        ])
 }
