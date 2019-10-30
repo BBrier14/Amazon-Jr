@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require("cli-table");
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -26,7 +27,19 @@ connection.connect(function (err) {
 function showProducts() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        console.log(res);
+        var table = new Table(
+            {
+                head: ["id", "product_name", "department_name", "price", "stock_quantity"],
+                colWidths: [5, 15, 20, 10, 20],  
+            }
+        );
+        for (let i = 0; i< res.length; i++){
+            table.push(
+               [res[i].id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity] 
+            )
+        };
+        console.log(table.toString());
+        // console.log(res);
         start();
     })
 }
