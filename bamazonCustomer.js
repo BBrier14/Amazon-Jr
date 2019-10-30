@@ -51,4 +51,17 @@ function start(){
                 }
             }
         ])
+        .then(function(shoppingCart){
+            const orderID = shoppingCart.item;
+            const orderQuantity = shoppingCart.units;
+
+            connection.query('SELECT * FROM products', function(err, chosenItem){
+                if (err) throw err;
+
+                if(chosenItem[0].stock_quantity - orderQuantity >= 0){
+                    console.log("Item in stock");
+                    console.log("Your total will be $" + (chosenItem[0].price * orderQuantity))
+                }
+            })
+        })
 }
