@@ -17,33 +17,33 @@ var connection = mysql.createConnection({
     database: "bamazon_DB"
 });
 
-// connect to the mysql server and sql database
+//Connect to mysql
 connection.connect(function (err) {
     if (err) throw err;
-    // run the start function after the connection is made to prompt the user
     showProducts();
 });
 
+//Function to display inventory list, uses cli-table
 function showProducts() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         var table = new Table(
             {
                 head: ["id", "product_name", "department_name", "price", "stock_quantity"],
-                colWidths: [5, 15, 20, 10, 20],  
+                colWidths: [5, 15, 20, 10, 20],
             }
         );
-        for (let i = 0; i< res.length; i++){
+        for (let i = 0; i < res.length; i++) {
             table.push(
-               [res[i].id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity] 
+                [res[i].id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
             )
         };
         console.log(table.toString());
-        // console.log(res);
         start();
     })
 }
 
+//function to initiate the app and ask user to submit what they would like to buy
 function start() {
     console.log("--------------WELCOME TO BAMAZON!----------------")
     inquirer
@@ -76,7 +76,7 @@ function start() {
                     console.log("Item in stock");
                     console.log("Your total will be $" + (chosenItem[0].price * orderQuantity));
                     connection.query(
-                        'UPDATE products SET ? WHERE ?', 
+                        'UPDATE products SET ? WHERE ?',
                         [
                             {
                                 stock_quantity: chosenItem[0].stock_quantity - orderQuantity
@@ -85,10 +85,10 @@ function start() {
                                 id: orderID
                             }
                         ],
-                        function(err, res) {
+                        function (err, res) {
                             if (err) throw err;
-                            console.log(res.affectedRows + " products updated!\n");  
-                            showProducts();                  
+                            console.log(res.affectedRows + " products updated!\n");
+                            showProducts();
                         });
                 } else {
                     console.log("Sorry, we currently have insufficent stock to complete your order")
@@ -98,27 +98,4 @@ function start() {
         })
 }
 
-// function updateInventory(){
-//     console.log("Updating quantities...\n");
-//     const query = connection.query(
-//         "UPDATE products SET ? Where ?",
-//         [
-//             {
-//                 stock_quantity: chosenItem[0].stock_quantity - orderQuantity
-//             },
-//             {
-//                 id: orderID
-//             }
-//         ],
-//         function(err, res) {
-//             if (err) throw err;
-//             console.log(res.affectedRows + " products updated!\n");
-//         }
-//     )
-// }
 
-// connection.query('UPDATE products SET stock_quantity ? WHERE ?', [chosenItem[0].stock_quantity - orderQuantity, orderID,],
-//                         function (err, res){
-//                             if (err) throw err;
-//                             showProducts();
-//                         });
