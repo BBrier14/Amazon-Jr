@@ -62,9 +62,9 @@ function start() {
                     console.log("Item in stock");
                     console.log("Your total will be $" + (chosenItem[0].price * orderQuantity));
                     connection.query('UPDATE products SET stock_quantity=? WHERE= ?', [chosenItem[0].stock_quantity - orderQuantity, orderID,],
-                        function (err, inventory) {
+                        function (err, res) {
                             if (err) throw err;
-                            showProducts();
+                            console.log(res);
                         });
                 } else{
                     console.log("Sorry, we currently have insufficent stock to complete your order")
