@@ -51,7 +51,13 @@ function start() {
             {
                 name: "item",
                 type: "input",
-                message: "Enter the ID Number of the product you would like to purchase"
+                message: "Enter the ID Number of the product you would like to purchase",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    return false;
+                }
             },
             {
                 name: "units",
