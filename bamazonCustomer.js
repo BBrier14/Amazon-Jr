@@ -32,6 +32,7 @@ function showProducts() {
 }
 
 function start() {
+    console.log("--------------WELCOME TO BAMAZON!----------------")
     inquirer
         .prompt([
             {
@@ -61,15 +62,50 @@ function start() {
                 if (chosenItem[0].stock_quantity - orderQuantity >= 0) {
                     console.log("Item in stock");
                     console.log("Your total will be $" + (chosenItem[0].price * orderQuantity));
-                    connection.query('UPDATE products SET stock_quantity=? WHERE= ?', [chosenItem[0].stock_quantity - orderQuantity, orderID,],
-                        function (err, res) {
+                    connection.query(
+                        'UPDATE products SET ? WHERE ?', 
+                        [
+                            {
+                                stock_quantity: chosenItem[0].stock_quantity - orderQuantity
+                            },
+                            {
+                                id: orderID
+                            }
+                        ],
+                        function(err, res) {
                             if (err) throw err;
-                            console.log(res);
+                            console.log(res.affectedRows + " products updated!\n");  
+                            showProducts();                  
                         });
-                } else{
+                } else {
                     console.log("Sorry, we currently have insufficent stock to complete your order")
+                    showProducts();
                 }
-                start();
             })
         })
 }
+
+// function updateInventory(){
+//     console.log("Updating quantities...\n");
+//     const query = connection.query(
+//         "UPDATE products SET ? Where ?",
+//         [
+//             {
+//                 stock_quantity: chosenItem[0].stock_quantity - orderQuantity
+//             },
+//             {
+//                 id: orderID
+//             }
+//         ],
+//         function(err, res) {
+//             if (err) throw err;
+//             console.log(res.affectedRows + " products updated!\n");
+//         }
+//     )
+// }
+
+// connection.query('UPDATE products SET stock_quantity ? WHERE ?', [chosenItem[0].stock_quantity - orderQuantity, orderID,],
+//                         function (err, res){
+//                             if (err) throw err;
+//                             showProducts();
+//                         });
